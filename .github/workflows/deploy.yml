@@ -27,6 +27,8 @@ jobs:
           cache: npm
       - id: pages
         uses: actions/configure-pages@v5
+      # package-lock.json は npm 11 で作っている。Node 22 付属の npm 10 では npm ci が失敗するため揃える
+      - run: npm install -g npm@11.6.2
       - run: npm ci
       - run: npm run lint
       - run: npm run build
