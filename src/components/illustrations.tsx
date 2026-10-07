@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useInView, useReducedMotion, type Variants } from "motion/react";
+import { motion, useInView, type Variants } from "motion/react";
+import { useEntrance } from "@/lib/use-entrance";
 import { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
@@ -40,8 +41,9 @@ function Stage({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-40px" });
-  const reduced = useReducedMotion();
   const [run, setRun] = useState(0);
+  // カーソルを乗せるたびに svg を作り直し(key)、最初から動かし直す
+  const entrance = useEntrance(inView, run);
 
   return (
     <div
@@ -55,8 +57,8 @@ function Stage({
         aria-label={label}
         viewBox="0 0 320 160"
         className="size-full"
-        initial={reduced ? false : "hidden"}
-        animate={inView || reduced ? "show" : "hidden"}
+        initial="hidden"
+        animate={entrance}
       >
         {children}
       </motion.svg>
@@ -344,7 +346,7 @@ export type IllustrationName = keyof typeof ILLUSTRATIONS;
 
 /** 冒頭のイニシャル。ページを開いたときに、ペンで書くように線が引かれる */
 export function Monogram() {
-  const reduced = useReducedMotion();
+  const entrance = useEntrance();
   const strokes = [
     "M24 72 V28 H40 a11 11 0 0 1 0 22 H24", // R の縦線と丸み
     "M38 50 L50 72", // R の脚
@@ -358,8 +360,8 @@ export function Monogram() {
       role="img"
       aria-label="RH"
       className="size-full text-foreground"
-      initial={reduced ? false : "hidden"}
-      animate="show"
+      initial="hidden"
+      animate={entrance}
     >
       {strokes.map((d, i) => (
         <motion.path

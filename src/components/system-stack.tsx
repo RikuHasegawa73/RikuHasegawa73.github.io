@@ -8,6 +8,7 @@ import {
   useTransform,
   type Variants,
 } from "motion/react";
+import { useEntrance } from "@/lib/use-entrance";
 import { useId } from "react";
 
 /**
@@ -216,6 +217,7 @@ function Dashboard({
         cy={-h + 15}
         r="2.5"
         className="fill-white"
+        initial={{ opacity: 1 }}
         animate={reduced ? undefined : { opacity: [1, 0.25, 1] }}
         transition={live(0, 1.6)}
       />
@@ -280,6 +282,7 @@ function Dashboard({
             rx="2"
             className="fill-emerald-500"
             style={{ transformBox: "fill-box", transformOrigin: "bottom" }}
+            initial={{ scaleY: 1 }}
             animate={reduced ? undefined : { scaleY: swings[i] }}
             transition={{
               ...live(0.9 + i * 0.12, 2.6 + i * 0.35),
@@ -402,6 +405,7 @@ function Callout({ layer, index }: { layer: Layer; index: number }) {
 
 export function SystemStack() {
   const reduced = useReducedMotion() ?? false;
+  const entrance = useEntrance();
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
   const rotateY = useSpring(useTransform(mx, [-0.5, 0.5], [-9, 9]), {
@@ -435,8 +439,8 @@ export function SystemStack() {
           aria-label="画面・API・データベース・インフラが積み重なった業務システムの構成図"
           className="w-full overflow-visible max-md:w-[160%] max-md:max-w-none"
           style={{ rotateX, rotateY }}
-          initial={reduced ? false : "hidden"}
-          animate="show"
+          initial="hidden"
+          animate={entrance}
         >
           <ellipse
             cx={OX}

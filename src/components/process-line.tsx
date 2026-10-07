@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion, type Variants } from "motion/react";
+import { motion, type Variants } from "motion/react";
+import { useEntrance } from "@/lib/use-entrance";
 
 const STEPS = ["要件定義", "設計", "実装", "テスト", "運用"];
 
@@ -38,14 +39,14 @@ const label = (i: number): Variants => ({
  * 開いたときに左から線が伸び、点が順に点灯してチェックが付き、最後の「運用」で輪が 1 回広がる。
  */
 export function ProcessLine() {
-  const reduced = useReducedMotion();
+  const entrance = useEntrance();
 
   return (
     <motion.ol
       aria-label="担当できる工程"
       className="relative mt-2 grid max-w-[520px] grid-cols-5"
-      initial={reduced ? false : "hidden"}
-      animate="show"
+      initial="hidden"
+      animate={entrance}
     >
       {/* 点と点を結ぶ線。点の中心(各列の中央)の間に引く */}
       <span aria-hidden className="absolute top-[9px] left-[10%] right-[10%] h-px bg-border" />
